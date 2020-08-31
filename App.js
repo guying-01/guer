@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-08-31 14:43:58
+ * @LastEditTime: 2020-08-31 17:18:02
  */
 /**
  * Sample React Native App
@@ -12,7 +12,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -20,6 +20,8 @@ import {
   View,
   Text,
   StatusBar,
+  DrawerLayoutAndroid,
+  Button,
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -29,6 +31,22 @@ import ScrollableTabView, {
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
 const App: () => React$Node = () => {
+  const [drawerPosition, setDrawerPosition] = useState('left');
+  const changeDrawerPosition = () => {
+    if (drawerPosition === 'left') {
+      setDrawerPosition('right');
+    } else {
+      setDrawerPosition('left');
+    }
+  };
+
+  const navigationView = (
+    <View style={styles.navigationContainer}>
+      <Text style={{margin: 10, fontSize: 15}}>I'm in the Drawer!</Text>
+    </View>
+  );
+
+  const drawerRef = useRef();
   return (
     <ScrollableTabView
       style={styles.container}
@@ -43,6 +61,23 @@ const App: () => React$Node = () => {
       </Text>
       <Text style={styles.textStyle} tabLabel="我">
         我
+        <DrawerLayoutAndroid
+          drawerWidth={300}
+          drawerPosition={drawerPosition}
+          renderNavigationView={() => navigationView}>
+          <View style={styles.container}>
+            <Text style={{margin: 10, fontSize: 15}}>
+              DrawerLayoutAndroid example
+            </Text>
+            <Button
+              title="Change Drawer Position"
+              onPress={() => changeDrawerPosition()}
+            />
+            <Text style={{margin: 10, fontSize: 15}}>
+              Drawer on the {drawerPosition}! Swipe from the side to see!
+            </Text>
+          </View>
+        </DrawerLayoutAndroid>
       </Text>
     </ScrollableTabView>
   );
@@ -87,6 +122,20 @@ const styles = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: 'right',
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 50,
+    backgroundColor: '#ecf0f1',
+    padding: 8,
+  },
+  navigationContainer: {
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: '#fff',
+    padding: 8,
   },
 });
 
