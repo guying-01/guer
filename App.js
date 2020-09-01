@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-08-31 17:18:02
+ * @LastEditTime: 2020-09-01 10:02:06
  */
 /**
  * Sample React Native App
@@ -31,7 +31,7 @@ import ScrollableTabView, {
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
 const App: () => React$Node = () => {
-  const [drawerPosition, setDrawerPosition] = useState('left');
+  const [drawerPosition, setDrawerPosition] = useState('right');
   const changeDrawerPosition = () => {
     if (drawerPosition === 'left') {
       setDrawerPosition('right');
@@ -41,7 +41,7 @@ const App: () => React$Node = () => {
   };
 
   const navigationView = (
-    <View style={styles.navigationContainer}>
+    <View>
       <Text style={{margin: 10, fontSize: 15}}>I'm in the Drawer!</Text>
     </View>
   );
@@ -49,9 +49,9 @@ const App: () => React$Node = () => {
   const drawerRef = useRef();
   return (
     <ScrollableTabView
-      style={styles.container}
       tabBarUnderlineStyle={styles.lineStyle}
       tabBarPosition="bottom"
+      renderTabBar={() => <DefaultTabBar />}
       tabBarActiveTextColor="#000">
       <Text style={styles.textStyle} tabLabel="消息">
         消息
@@ -65,7 +65,7 @@ const App: () => React$Node = () => {
           drawerWidth={300}
           drawerPosition={drawerPosition}
           renderNavigationView={() => navigationView}>
-          <View style={styles.container}>
+          <View>
             <Text style={{margin: 10, fontSize: 15}}>
               DrawerLayoutAndroid example
             </Text>
