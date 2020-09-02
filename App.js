@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-09-01 10:02:06
+ * @LastEditTime: 2020-09-02 14:23:22
  */
 /**
  * Sample React Native App
@@ -25,11 +25,13 @@ import {
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
+import BarView from './component/BarView';
 import ScrollableTabView, {
   DefaultTabBar,
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
+
+const tabs = ['消息', '广场', '我'];
 const App: () => React$Node = () => {
   const [drawerPosition, setDrawerPosition] = useState('right');
   const changeDrawerPosition = () => {
@@ -61,28 +63,29 @@ const App: () => React$Node = () => {
       </Text>
       <Text style={styles.textStyle} tabLabel="我">
         我
-        <DrawerLayoutAndroid
-          drawerWidth={300}
-          drawerPosition={drawerPosition}
-          renderNavigationView={() => navigationView}>
-          <View>
-            <Text style={{margin: 10, fontSize: 15}}>
-              DrawerLayoutAndroid example
-            </Text>
-            <Button
-              title="Change Drawer Position"
-              onPress={() => changeDrawerPosition()}
-            />
-            <Text style={{margin: 10, fontSize: 15}}>
-              Drawer on the {drawerPosition}! Swipe from the side to see!
-            </Text>
-          </View>
-        </DrawerLayoutAndroid>
       </Text>
     </ScrollableTabView>
   );
 };
-
+{
+  /* <DrawerLayoutAndroid
+drawerWidth={300}
+drawerPosition={drawerPosition}
+renderNavigationView={() => navigationView}>
+<View>
+  <Text style={{margin: 10, fontSize: 15}}>
+    DrawerLayoutAndroid example
+  </Text>
+  <Button
+    title="Change Drawer Position"
+    onPress={() => changeDrawerPosition()}
+  />
+  <Text style={{margin: 10, fontSize: 15}}>
+    Drawer on the {drawerPosition}! Swipe from the side to see!
+  </Text>
+</View>
+</DrawerLayoutAndroid> */
+}
 const styles = StyleSheet.create({
   textStyle: {
     padding: 20,
