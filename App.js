@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-09-02 14:23:22
+ * @LastEditTime: 2020-11-04 17:19:14
  */
 /**
  * Sample React Native App
@@ -13,6 +13,12 @@
  */
 
 import React, {useState, useRef} from 'react';
+import {NavigationContainer, TabActions} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import JMessage from 'jmessage-react-plugin';
+import Tabs from './component/Tabs';
+import Chat from './component/Chat';
+
 import {
   SafeAreaView,
   StyleSheet,
@@ -20,73 +26,39 @@ import {
   View,
   Text,
   StatusBar,
-  DrawerLayoutAndroid,
   Button,
+  Alert,
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import BarView from './component/BarView';
-import ScrollableTabView, {
-  DefaultTabBar,
-  ScrollableTabBar,
-} from 'react-native-scrollable-tab-view';
 
-const tabs = ['消息', '广场', '我'];
-const App: () => React$Node = () => {
-  const [drawerPosition, setDrawerPosition] = useState('right');
-  const changeDrawerPosition = () => {
-    if (drawerPosition === 'left') {
-      setDrawerPosition('right');
-    } else {
-      setDrawerPosition('left');
-    }
-  };
+const RootStack = createStackNavigator();
 
-  const navigationView = (
-    <View>
-      <Text style={{margin: 10, fontSize: 15}}>I'm in the Drawer!</Text>
-    </View>
-  );
-
-  const drawerRef = useRef();
-  return (
-    <ScrollableTabView
-      tabBarUnderlineStyle={styles.lineStyle}
-      tabBarPosition="bottom"
-      renderTabBar={() => <DefaultTabBar />}
-      tabBarActiveTextColor="#000">
-      <Text style={styles.textStyle} tabLabel="消息">
-        消息
-      </Text>
-      <Text style={styles.textStyle} tabLabel="广场">
-        广场
-      </Text>
-      <Text style={styles.textStyle} tabLabel="我">
-        我
-      </Text>
-    </ScrollableTabView>
-  );
-};
-{
-  /* <DrawerLayoutAndroid
-drawerWidth={300}
-drawerPosition={drawerPosition}
-renderNavigationView={() => navigationView}>
-<View>
-  <Text style={{margin: 10, fontSize: 15}}>
-    DrawerLayoutAndroid example
-  </Text>
-  <Button
-    title="Change Drawer Position"
-    onPress={() => changeDrawerPosition()}
-  />
-  <Text style={{margin: 10, fontSize: 15}}>
-    Drawer on the {drawerPosition}! Swipe from the side to see!
-  </Text>
-</View>
-</DrawerLayoutAndroid> */
+class App extends React.Component {
+  componentDidMount() {
+    JMessage.init({
+      appkey: '5197b5beda256e4329b5f195',
+      isOpenMessageRoaming: true,
+      isProduction: false,
+      channel: '',
+    });
+    JMessage.setDebugMode({enable: true});
+  }
+  render() {
+    return (
+      <NavigationContainer>
+        <RootStack.Navigator>
+          <RootStack.Screen name="首页" component={Tabs} />
+          <RootStack.Screen name="Chat" component={Chat} />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    );
+  }
 }
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   textStyle: {
     padding: 20,
   },

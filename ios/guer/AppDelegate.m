@@ -55,4 +55,24 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 }
 
+#import <RCTJMessageModule.h>
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{   
+   [JMessage setupJMessage:launchOptions
+                    appKey:appKey
+                   channel:@""
+          apsForProduction:isProduction
+                  category:nil
+            messageRoaming:true];
+   
+   [JMessage addDelegate:self withConversation:nil];
+}
+
+//JMessage 离线消息监听
+- (void)onSyncOfflineMessageConversation:(JMSGConversation *)conversation
+                         offlineMessages:(NSArray JMSG_GENERIC ( __kindof JMSGMessage *) *)offlineMessages {
+  [RCTJMessageEventQueue sharedInstance].offlineConversation = conversation;
+  [RCTJMessageEventQueue sharedInstance].offlineMsgArray = offlineMessages;
+}
 @end

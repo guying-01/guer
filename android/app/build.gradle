@@ -134,6 +134,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [
+            JPUSH_APPKEY: "5197b5beda256e4329b5f195",	//在此替换你的APPKey
+            APP_CHANNEL: "developer-default"		//应用渠道号
+        ]
     }
     splits {
         abi {
@@ -200,6 +204,9 @@ dependencies {
         exclude group:'com.facebook.flipper'
     }
 
+    compile project(':jmessage-react-plugin') // 新增的
+    compile project(':jcore-react-native')  // 新增的
+    
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")
