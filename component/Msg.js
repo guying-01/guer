@@ -8,12 +8,14 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Chat from './Chat';
 import JMessage from 'jmessage-react-plugin';
 import Prompt from './Prompt';
+let {width, height} = Dimensions.get('window');
 
 function rand(m) {
   m = m > 16 ? 16 : m;
@@ -32,28 +34,18 @@ export default class Msg extends Component {
       message: '',
       modalVisible: false,
       chatRoomList: [],
+      groupList: [],
     };
   }
   componentDidMount() {
     JMessage.getMyInfo((info) => {
       console.log(info);
+      global.groupId = '45927173';
       if (info.username == undefined) {
-        this.setState({modalVisible: true});
+        // this.setState({modalVisible: true});
+        this.props.navigation.navigate('Login');
       } else {
-        this.getChatRoom();
-        JMessage.createGroup(
-          {name: 'group_name', desc: 'group_desc', groupType: 'public'},
-          (groupId) => {
-            console.log('\n\n\n');
-            console.log('groupId', groupId);
-            // groupId: 新创建的群组 ID
-            // do something.
-          },
-          (error) => {
-            var code = error.code;
-            var desc = error.description;
-          },
-        );
+        this.getPublicGroups();
       }
     });
 
@@ -69,7 +61,54 @@ export default class Msg extends Component {
     // );
   }
 
-  getChatRoom() {
+  componentDidUpdate() {
+    this.getPublicGroups();
+  }
+
+  createGroup() {
+    JMessage.createGroup(
+      {name: '十里春风', desc: '默认群组', groupType: 'public'},
+      (groupId) => {
+        console.log('创建群组成功', groupId);
+        global.groupId = groupId;
+      },
+      (error) => {
+        console.log('创建群组失败', error);
+      },
+    );
+  }
+
+  getPublicGroups() {
+    JMessage.getPublicGroupInfos(
+      {appKey: global.appKey, start: 0, count: 20},
+      (groupArr) => {
+        this.setState({groupList: groupArr});
+      },
+      (error) => {
+        var code = error.code;
+        var desc = error.description;
+        console.log('公开群组', desc);
+      },
+    );
+  }
+
+  getJoinedGroup() {
+    JMessage.getGroupIds(
+      (result) => {
+        /**
+         * result {Array[Number]} 当前用户所加入的群组的groupID的list
+         */
+        console.log(result, '当前用户加入的群组id');
+        if (result.length == 0) {
+          this.createGroup();
+        } else {
+          global.groupId = result[0];
+        }
+      },
+      (error) => {
+        console.log('获取用户加入群组信息失败', error.desc);
+      },
+    );
     JMessage.getConversation(
       {
         type: 'group',
@@ -124,61 +163,6 @@ export default class Msg extends Component {
       },
       (conversation) => {
         console.log('加入聊天室十里春风成功', conversation);
-        console.log('\n\n\n\n');
-        JMessage.getChatRoomListByUser(
-          (list) => {
-            console.log('list', list);
-            console.log('\n\n\n\n');
-          },
-          (err) => {
-            console.log(err);
-            console.log('\n\n\n\n');
-          },
-        );
-
-        JMessage.getChatRoomInfos(
-          {roomIds: ['2']},
-          (list) => {
-            console.log('infos', list);
-            console.log('\n\n\n\n');
-          },
-          (err) => {
-            console.log(err);
-            console.log('\n\n\n\n');
-          },
-        );
-        JMessage.createSendMessage(
-          {
-            type: 'group',
-            username: '123',
-            appKey: '5197b5beda256e4329b5f195',
-            messageType: 'text',
-            text: 'message text',
-            groupId: '45921644',
-          },
-          (message) => {
-            console.log(message, 'message1');
-            JMessage.sendTextMessage(
-              {
-                id: message.id,
-                type: 'group',
-                username: '123',
-                text: 'message text',
-                groupId: '45921644',
-                extras: {key1: 'value1'},
-                appKey: '5197b5beda256e4329b5f195',
-              },
-              (res) => {
-                console.log('发送成功', res);
-                // 成功回调
-              },
-              (err) => {
-                console.log('发送失败', err);
-                // 失败回调
-              },
-            );
-          },
-        );
         // 进入聊天室，会自动创建并返回该聊天室会话信息。
         // do something.
       },
@@ -244,15 +228,21 @@ export default class Msg extends Component {
   }
 
   _renderItem({item}) {
-    console.log(this.props.navigation);
     return (
-      <TouchableOpacity style={styles.item}>
-        <Text
-          style={styles.title}
-          onPress={() => this.props.navigation.navigate('Chat')}>
-          十里春风1213
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.itemStyle}>
+        <TouchableOpacity>
+          <Text
+            style={styles.title}
+            onPress={() =>
+              this.props.navigation.navigate('Chat', {
+                groupId: item.id,
+                name: item.name,
+              })
+            }>
+            {item.name}
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -261,9 +251,9 @@ export default class Msg extends Component {
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <SafeAreaView style={styles.container}>
           <FlatList
-            data={this.state.chatRoomList}
+            data={this.state.groupList}
             renderItem={this._renderItem.bind(this)}
-            keyExtractor={(item) => item.target.roomId}
+            keyExtractor={(item) => item.id}
           />
         </SafeAreaView>
         <Prompt
@@ -282,13 +272,18 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 0,
   },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
+  item: {},
   title: {
-    fontSize: 32,
+    fontSize: 20,
+  },
+  itemStyle: {
+    width: width,
+    padding: 5,
+    // flex: 1,
+    // marginVertical: 8,
+    // marginHorizontal: 16,
+    // backgroundColor: '#f9c2ff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#61dafb',
   },
 });

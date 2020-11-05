@@ -82,7 +82,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -138,6 +138,7 @@ android {
             JPUSH_APPKEY: "5197b5beda256e4329b5f195",	//在此替换你的APPKey
             APP_CHANNEL: "developer-default"		//应用渠道号
         ]
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -206,7 +207,9 @@ dependencies {
 
     compile project(':jmessage-react-plugin') // 新增的
     compile project(':jcore-react-native')  // 新增的
-    
+    compile project(':react-native-code-push')
+    compile 'com.android.support:multidex:1.0.1' //enter the latest version
+
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")

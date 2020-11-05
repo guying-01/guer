@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-11-04 17:19:14
+ * @LastEditTime: 2020-11-05 15:38:55
  */
 /**
  * Sample React Native App
@@ -18,7 +18,13 @@ import {createStackNavigator} from '@react-navigation/stack';
 import JMessage from 'jmessage-react-plugin';
 import Tabs from './component/Tabs';
 import Chat from './component/Chat';
+import Register from './component/Login/Register';
+import Login from './component/Login/Login';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import GroupSetting from './component/GroupSetting';
+
+import codePush from 'react-native-code-push';
 import {
   SafeAreaView,
   StyleSheet,
@@ -33,9 +39,28 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const RootStack = createStackNavigator();
+const LoginStack = createStackNavigator();
 
+function LoginScreen() {
+  return (
+    <LoginStack.Navigator>
+      <LoginStack.Screen name="Register" component={Register} />
+      <LoginStack.Screen name="Login" component={Login} />
+    </LoginStack.Navigator>
+  );
+}
+
+global.appkey = '5197b5beda256e4329b5f195';
 class App extends React.Component {
   componentDidMount() {
+    codePush.checkForUpdate().then((update) => {
+      if (update) {
+        console.log('有新的更新！');
+      } else {
+        console.log('已是最新，不需要更新！');
+      }
+    });
+
     JMessage.init({
       appkey: '5197b5beda256e4329b5f195',
       isOpenMessageRoaming: true,
@@ -43,13 +68,42 @@ class App extends React.Component {
       channel: '',
     });
     JMessage.setDebugMode({enable: true});
+    var listener = (message) => {
+      // 收到的消息会返回一个消息对象. 对象字段可以参考对象说明
+      console.log('收到新消息', message);
+    };
+
+    JMessage.addReceiveMessageListener(listener);
   }
   render() {
     return (
       <NavigationContainer>
         <RootStack.Navigator>
           <RootStack.Screen name="首页" component={Tabs} />
-          <RootStack.Screen name="Chat" component={Chat} />
+          <RootStack.Screen
+            name="Chat"
+            component={Chat}
+            options={({navigation, route}) => ({
+              headerTitle: (props) => {
+                return <Text> {route.params.name}</Text>;
+              },
+              headerRight: () => (
+                <Ionicons
+                  name="menu"
+                  size={20}
+                  color="#000"
+                  style={{paddingRight: 5}}
+                  onPress={() =>
+                    navigation.navigate('GroupSetting', {
+                      groupId: route.params.groupId,
+                    })
+                  }
+                />
+              ),
+            })}
+          />
+          <RootStack.Screen name="GroupSetting" component={GroupSetting} />
+          <RootStack.Screen name="User" component={LoginScreen} />
         </RootStack.Navigator>
       </NavigationContainer>
     );

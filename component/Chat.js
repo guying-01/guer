@@ -13,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import JMessage from 'jmessage-react-plugin';
 export default class Chat extends Component {
@@ -24,29 +25,46 @@ export default class Chat extends Component {
   }
 
   sendMsg() {
-    console.log(global.roomId);
-
-    JMessage.sendTextMessage(
+    const groupId = this.props.route.params.groupId;
+    const inputText = this.state.inputValue;
+    if (!inputText || inputText.length == 0) {
+      return ToastAndroid.show('不能发送空消息', ToastAndroid.SHORT);
+    }
+    JMessage.createSendMessage(
       {
         type: 'group',
         username: '',
-        appKey: '5197b5beda256e4329b5f195',
+        appKey: '',
+        messageType: 'text',
         text: this.state.inputValue,
-        extras: {},
-        messageSendingOptions: JMessage.messageSendingOptions,
-        roomId: '2',
+        groupId,
       },
-      (res) => {
-        console.log('发送成功');
-        // do something.
-      },
-      (error) => {
-        console.log('消息发送失败', error);
+      (message) => {
+        JMessage.sendTextMessage(
+          {
+            id: message.id,
+            type: 'group',
+            username: '',
+            text: this.state.inputValue,
+            groupId,
+            extras: {},
+            appKey: '',
+          },
+          (res) => {
+            console.log('发送成功', res);
+            // 成功回调
+          },
+          (err) => {
+            console.log('发送失败', err);
+            // 失败回调
+          },
+        );
       },
     );
   }
 
   render() {
+    console.log(this.props.route);
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
