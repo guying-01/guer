@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-11-05 15:38:55
+ * @LastEditTime: 2020-11-06 16:28:04
  */
 /**
  * Sample React Native App
@@ -13,6 +13,7 @@
  */
 
 import React, {useState, useRef} from 'react';
+import {ToastAndroid} from 'react-native';
 import {NavigationContainer, TabActions} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import JMessage from 'jmessage-react-plugin';
@@ -42,12 +43,7 @@ const RootStack = createStackNavigator();
 const LoginStack = createStackNavigator();
 
 function LoginScreen() {
-  return (
-    <LoginStack.Navigator>
-      <LoginStack.Screen name="Register" component={Register} />
-      <LoginStack.Screen name="Login" component={Login} />
-    </LoginStack.Navigator>
-  );
+  return <LoginStack.Navigator />;
 }
 
 global.appkey = '5197b5beda256e4329b5f195';
@@ -55,9 +51,9 @@ class App extends React.Component {
   componentDidMount() {
     codePush.checkForUpdate().then((update) => {
       if (update) {
-        console.log('有新的更新！');
+        ToastAndroid.show('有新的更新！', ToastAndroid.SHORT);
       } else {
-        console.log('已是最新，不需要更新！');
+        ToastAndroid.show('已是最新，不需要更新！', ToastAndroid.SHORT);
       }
     });
 
@@ -68,12 +64,6 @@ class App extends React.Component {
       channel: '',
     });
     JMessage.setDebugMode({enable: true});
-    var listener = (message) => {
-      // 收到的消息会返回一个消息对象. 对象字段可以参考对象说明
-      console.log('收到新消息', message);
-    };
-
-    JMessage.addReceiveMessageListener(listener);
   }
   render() {
     return (
@@ -103,7 +93,24 @@ class App extends React.Component {
             })}
           />
           <RootStack.Screen name="GroupSetting" component={GroupSetting} />
-          <RootStack.Screen name="User" component={LoginScreen} />
+          <RootStack.Screen
+            name="Login"
+            component={Login}
+            options={({navigation, route}) => ({
+              headerTitle: (props) => {
+                return <Text> {route.params.name}</Text>;
+              },
+            })}
+          />
+          <RootStack.Screen
+            name="Register"
+            component={Register}
+            options={({navigation, route}) => ({
+              headerTitle: (props) => {
+                return <Text> {route.params.name}</Text>;
+              },
+            })}
+          />
         </RootStack.Navigator>
       </NavigationContainer>
     );

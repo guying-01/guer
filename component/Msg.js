@@ -43,26 +43,19 @@ export default class Msg extends Component {
       global.groupId = '45927173';
       if (info.username == undefined) {
         // this.setState({modalVisible: true});
-        this.props.navigation.navigate('Login');
+        this.props.navigation.navigate('Login', {name: '登陆'});
       } else {
         this.getPublicGroups();
+        // this.props.navigation.navigate('Login', {name: '登陆'});
       }
     });
-
-    // JMessage.getUserInfo(
-    //   {username: '6890036662881356', appKey: ''},
-    //   (userInfo) => {
-    //     console.log(userInfo);
-    //   },
-    //   (error) => {
-    //     var code = error.code;
-    //     var desc = error.description;
-    //   },
-    // );
   }
 
   componentDidUpdate() {
     this.getPublicGroups();
+    if (this.state.groupList.length == 0) {
+      this.createGroup();
+    }
   }
 
   createGroup() {
@@ -183,48 +176,6 @@ export default class Msg extends Component {
       ]);
       return false;
     }
-    JMessage.register(
-      {
-        username: userId,
-        password: 'Wsgy127938',
-      },
-      (res) => {
-        console.log('注册成功');
-        JMessage.login(
-          {
-            username: userId,
-            password: 'Wsgy127938',
-          },
-          (loginRes) => {
-            this.getChatRoom();
-            JMessage.updateMyInfo(
-              {
-                nickname: 'nickname',
-                birthday: 1604475231313,
-                gender: 'male',
-                signature: '',
-                region: '',
-                address: '',
-              },
-              (info) => {
-                console.log(info);
-              },
-              (error) => {
-                console.log(error);
-                console.log('更新用户信息失败');
-              },
-            );
-          },
-          (loginError) => {
-            console.log('登陆失败' + loginError);
-          },
-        );
-      },
-      (error) => {
-        console.log(error);
-        console.log('注册失败');
-      },
-    );
   }
 
   _renderItem({item}) {

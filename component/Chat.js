@@ -21,7 +21,23 @@ export default class Chat extends Component {
     super(props);
     this.state = {
       inputValue: '',
+      msgArr: [{text: '123123', serverMessageId: 1}],
     };
+  }
+
+  componentDidMount() {
+    var listener = (message) => {
+      console.log(message.text, this.state.msgArr);
+
+      // 收到的消息会返回一个消息对象. 对象字段可以参考对象说明
+      if (message.target.id == global.groupId) {
+        let arr = this.state.msgArr;
+        arr.push(message);
+        this.setState({msgArr: arr});
+      }
+    };
+
+    JMessage.addReceiveMessageListener(listener);
   }
 
   sendMsg() {
@@ -51,11 +67,13 @@ export default class Chat extends Component {
             appKey: '',
           },
           (res) => {
-            console.log('发送成功', res);
+            let arr = this.state.msgArr;
+            arr.push(message);
+            this.setState({msgArr: arr});
             // 成功回调
           },
           (err) => {
-            console.log('发送失败', err);
+            ToastAndroid.show('发送失败', err, ToastAndroid.SHORT);
             // 失败回调
           },
         );
@@ -64,16 +82,22 @@ export default class Chat extends Component {
   }
 
   render() {
-    console.log(this.props.route);
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
         style={styles.container}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
-            <ScrollView>
-              <Text>这是中间的滚动页面 (flex: 1)</Text>
-              <Text>页面展示在这个组件中</Text>
+            <ScrollView
+              ref="scrollView"
+              onContentSizeChange={(width, height) =>
+                this.refs.scrollView.scrollTo({y: height})
+              }>
+              {this.state.msgArr.map((item) => {
+                return (
+                  <Text key={item.serverMessageId}>{item && item.text}</Text>
+                );
+              })}
             </ScrollView>
             <View style={styles.keyboardWrapperStyle}>
               <TextInput

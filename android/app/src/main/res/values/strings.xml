@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">guer</string>
+    <string name="app_name">顾尔</string>
     <string moduleConfig="true" name="CodePushDeploymentKey">w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV</string>
     <string name="CodePushPublicKey">-----BEGIN PUBLIC KEY-----
 E22JN21qlxac25EkjsCNFJougYeeqYm9w-FX5
