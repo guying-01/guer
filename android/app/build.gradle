@@ -204,7 +204,8 @@ dependencies {
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.flipper'
     }
-
+    
+    implementation project(':jpush-react-native')  // 添加 jpush 依赖
     compile project(':jmessage-react-plugin') // 新增的
     compile project(':jcore-react-native')  // 新增的
     compile project(':react-native-code-push')

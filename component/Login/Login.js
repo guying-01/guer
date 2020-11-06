@@ -56,7 +56,7 @@ export default class Login extends Component {
               onChangeText={(value) => this.setState({password: value})}
             />
             <View style={styles.btnContainer}>
-              <Button title="登陆" onPress={() => this.register()} />
+              <Button title="登陆" onPress={() => this.login()} />
             </View>
             <View>
               <TouchableOpacity>
