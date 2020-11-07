@@ -1,3 +1,11 @@
+/*
+ * @Author       : gy
+ * @Date         : 2020-11-06 21:22:59
+ * @LastEditors  : gy
+ * @LastEditTime : 2020-11-07 19:24:09
+ * @FilePath     : /guer/component/Tabs.js
+ * @Description  : 页面描述
+ */
 import React, {Component} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -34,7 +42,7 @@ export default class Tabs extends Component {
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'tomato',
+          activeTintColor: '#61dafb',
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="聊天室" component={MsgScreen} />

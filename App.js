@@ -1,8 +1,8 @@
 /*
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
- * @LastEditors: gy
- * @LastEditTime: 2020-11-06 16:28:04
+ * @LastEditors  : gy
+ * @LastEditTime : 2020-11-07 18:32:26
  */
 /**
  * Sample React Native App
@@ -69,7 +69,7 @@ class App extends React.Component {
     return (
       <NavigationContainer>
         <RootStack.Navigator>
-          <RootStack.Screen name="首页" component={Tabs} />
+          <RootStack.Screen name="顾尔" component={Tabs} />
           <RootStack.Screen
             name="Chat"
             component={Chat}
@@ -86,13 +86,22 @@ class App extends React.Component {
                   onPress={() =>
                     navigation.navigate('GroupSetting', {
                       groupId: route.params.groupId,
+                      name: '群组设置',
                     })
                   }
                 />
               ),
             })}
           />
-          <RootStack.Screen name="GroupSetting" component={GroupSetting} />
+          <RootStack.Screen
+            name="GroupSetting"
+            component={GroupSetting}
+            options={({navigation, route}) => ({
+              headerTitle: (props) => {
+                return <Text> {route.params.name}</Text>;
+              },
+            })}
+          />
           <RootStack.Screen
             name="Login"
             component={Login}

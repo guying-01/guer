@@ -14,6 +14,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ToastAndroid,
+  Image,
 } from 'react-native';
 import JMessage from 'jmessage-react-plugin';
 export default class Chat extends Component {
@@ -21,7 +22,7 @@ export default class Chat extends Component {
     super(props);
     this.state = {
       inputValue: '',
-      msgArr: [{text: '123123', serverMessageId: 1}],
+      msgArr: [],
     };
   }
 
@@ -67,9 +68,10 @@ export default class Chat extends Component {
             appKey: '',
           },
           (res) => {
+            console.log(message);
             let arr = this.state.msgArr;
             arr.push(message);
-            this.setState({msgArr: arr});
+            this.setState({msgArr: arr, inputValue: ''});
             // 成功回调
           },
           (err) => {
@@ -94,9 +96,30 @@ export default class Chat extends Component {
                 this.refs.scrollView.scrollTo({y: height})
               }>
               {this.state.msgArr.map((item) => {
-                return (
-                  <Text key={item.serverMessageId}>{item && item.text}</Text>
-                );
+                // return (
+                //   <Text key={item.serverMessageId}>{item && item.text}</Text>
+                // );
+                if (item.from.username == global.username) {
+                  return (
+                    <Text
+                      key={item.serverMessageId}
+                      style={styles.selfMsgStyle}>
+                      {item && item.text}
+                    </Text>
+                  );
+                } else {
+                  return (
+                    <View
+                      key={item.serverMessageId}
+                      style={styles.msgWrapperStyle}>
+                      <Image
+                        style={styles.avatarStyle}
+                        source={require('../assets/img/avatar.jpeg')}
+                      />
+                      <Text style={styles.msgStyle}>{item.text}</Text>
+                    </View>
+                  );
+                }
               })}
             </ScrollView>
             <View style={styles.keyboardWrapperStyle}>
@@ -104,6 +127,7 @@ export default class Chat extends Component {
                 placeholder=""
                 style={styles.textInput}
                 onChangeText={(value) => this.setState({inputValue: value})}
+                value={this.state.inputValue}
               />
               <TouchableOpacity>
                 <Text style={styles.submit} onPress={() => this.sendMsg()}>
@@ -145,6 +169,7 @@ const styles = StyleSheet.create({
   keyboardWrapperStyle: {
     flexDirection: 'row',
     height: 40,
+    alignItems: 'flex-start',
   },
   submit: {
     width: 60,
@@ -152,5 +177,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#61dafb',
     textAlign: 'center',
     color: '#fff',
+    height: 40,
+  },
+  msgWrapperStyle: {
+    maxWidth: 200,
+    alignItems: 'center',
+    marginBottom: 10,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  msgStyle: {
+    backgroundColor: '#666',
+    color: '#fff',
+    padding: 10,
+    borderRadius: 5,
+  },
+  selfMsgStyle: {
+    maxWidth: 200,
+    alignItems: 'flex-end',
+    marginLeft: 'auto',
+    backgroundColor: '#61dafb',
+    color: '#000',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  avatarStyle: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
   },
 });

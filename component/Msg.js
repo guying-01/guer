@@ -27,7 +27,6 @@ function rand(m) {
 }
 
 export default class Msg extends Component {
-  // const navigation = useNavigation();
   constructor(props) {
     super(props);
     this.state = {
@@ -39,14 +38,18 @@ export default class Msg extends Component {
   }
   componentDidMount() {
     JMessage.getMyInfo((info) => {
-      console.log(info);
       global.groupId = '45927173';
+      global.username = info.username;
+      console.log(info);
       if (info.username == undefined) {
-        // this.setState({modalVisible: true});
-        this.props.navigation.navigate('Login', {name: '登陆'});
+        this.props.navigation.navigate('Login', {
+          name: '登陆',
+          refresh: () => {
+            this.getPublicGroups();
+          },
+        });
       } else {
         this.getPublicGroups();
-        // this.props.navigation.navigate('Login', {name: '登陆'});
       }
     });
   }
@@ -229,12 +232,12 @@ const styles = StyleSheet.create({
   },
   itemStyle: {
     width: width,
-    padding: 5,
+    padding: 10,
     // flex: 1,
     // marginVertical: 8,
     // marginHorizontal: 16,
     // backgroundColor: '#f9c2ff',
     borderBottomWidth: 1,
-    borderBottomColor: '#61dafb',
+    borderBottomColor: '#e0e0e0',
   },
 });

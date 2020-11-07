@@ -30,8 +30,9 @@ export default class Login extends Component {
         password: this.state.password,
       },
       (loginRes) => {
-        console.log(loginRes);
-        this.props.navigation.navigate('首页');
+        global.username = this.state.username;
+        this.props.navigation.navigate('顾尔');
+        this.props.route.params.refresh();
       },
       (loginError) => {
         ToastAndroid.show('登陆失败' + loginError, ToastAndroid.SHORT);

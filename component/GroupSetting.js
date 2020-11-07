@@ -13,7 +13,7 @@ export default class GroupSetting extends Component {
       {groupId: this.props.route.params.groupId},
       () => {
         console.log('解散群成功');
-        this.props.navigation.navigate('首页');
+        this.props.navigation.navigate('顾尔');
         //
         // do something.
       },
