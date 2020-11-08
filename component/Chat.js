@@ -27,11 +27,12 @@ export default class Chat extends Component {
   }
 
   componentDidMount() {
+    const username = this.props.route.params.name;
     var listener = (message) => {
-      console.log(message.text, this.state.msgArr);
+      console.log(message, this.state.msgArr);
 
       // 收到的消息会返回一个消息对象. 对象字段可以参考对象说明
-      if (message.target.id == global.groupId) {
+      if (message.from.username == username) {
         let arr = this.state.msgArr;
         arr.push(message);
         this.setState({msgArr: arr});
@@ -44,13 +45,14 @@ export default class Chat extends Component {
   sendMsg() {
     const groupId = this.props.route.params.groupId;
     const inputText = this.state.inputValue;
+    const username = this.props.route.params.name;
     if (!inputText || inputText.length == 0) {
       return ToastAndroid.show('不能发送空消息', ToastAndroid.SHORT);
     }
     JMessage.createSendMessage(
       {
-        type: 'group',
-        username: '',
+        type: 'single',
+        username,
         appKey: '',
         messageType: 'text',
         text: this.state.inputValue,
@@ -60,10 +62,9 @@ export default class Chat extends Component {
         JMessage.sendTextMessage(
           {
             id: message.id,
-            type: 'group',
-            username: '',
+            type: 'single',
+            username,
             text: this.state.inputValue,
-            groupId,
             extras: {},
             appKey: '',
           },

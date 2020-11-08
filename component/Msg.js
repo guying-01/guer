@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ToastAndroid,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -34,32 +35,36 @@ export default class Msg extends Component {
       modalVisible: false,
       chatRoomList: [],
       groupList: [],
+      friends: [],
     };
   }
   componentDidMount() {
     JMessage.getMyInfo((info) => {
       global.groupId = '45927173';
-      global.username = info.username;
       console.log(info);
       if (info.username == undefined) {
         this.props.navigation.navigate('Login', {
           name: '登陆',
           refresh: () => {
-            this.getPublicGroups();
+            this.getFriends();
           },
         });
       } else {
-        this.getPublicGroups();
+        global.username = info.username;
+        this.getFriends();
+        // this.props.navigation.navigate('Login', {
+        //   name: '登陆',
+        //   refresh: () => {
+        //     this.getPublicGroups();
+        //   },
+        // });
       }
     });
   }
 
-  componentDidUpdate() {
-    this.getPublicGroups();
-    if (this.state.groupList.length == 0) {
-      this.createGroup();
-    }
-  }
+  // componentDidUpdate() {
+  //   this.getFriends();
+  // }
 
   createGroup() {
     JMessage.createGroup(
@@ -70,6 +75,18 @@ export default class Msg extends Component {
       },
       (error) => {
         console.log('创建群组失败', error);
+      },
+    );
+  }
+
+  getFriends() {
+    JMessage.getFriends(
+      (friendArr) => {
+        this.setState({friends: friendArr});
+      },
+      (error) => {
+        var desc = error.description;
+        ToastAndroid.show(desc, ToastAndroid.SHORT);
       },
     );
   }
@@ -149,23 +166,29 @@ export default class Msg extends Component {
     );
   }
 
-  joinChatRoom(roomId) {
-    JMessage.enterConversation(
-      {
-        type: 'group',
-        username: '',
-        appKey: '5197b5beda256e4329b5f195',
-        groupId: roomId,
-      },
-      (conversation) => {
-        console.log('加入聊天室十里春风成功', conversation);
-        // 进入聊天室，会自动创建并返回该聊天室会话信息。
-        // do something.
-      },
-      (chatRoomError) => {
-        console.log(chatRoomError);
-      },
-    );
+  joinChatRoom(item) {
+    this.props.navigation.navigate('Chat', {
+      name: item.username,
+    });
+    console.log(item.username, global.username);
+    // JMessage.addGroupMembers(
+    //   {
+    //     appKey: '',
+    //     id: item.id,
+    //     usernameArray: [global.username],
+    //   },
+    //   (conversation) => {
+    //     console.log('加入聊天成功');
+    //     this.props.navigation.navigate('Chat', {
+    //       groupId: item.id,
+    //       name: item.name,
+    //     });
+    //   },
+    //   (chatRoomError) => {
+    //     console.log(chatRoomError);
+    //     ToastAndroid.show('加入聊天室失败' + chatRoomError, ToastAndroid.SHORT);
+    //   },
+    // );
   }
 
   register(input) {
@@ -187,13 +210,10 @@ export default class Msg extends Component {
         <TouchableOpacity>
           <Text
             style={styles.title}
-            onPress={() =>
-              this.props.navigation.navigate('Chat', {
-                groupId: item.id,
-                name: item.name,
-              })
-            }>
-            {item.name}
+            onPress={() => {
+              this.joinChatRoom(item);
+            }}>
+            {item.username}
           </Text>
         </TouchableOpacity>
       </View>
@@ -205,7 +225,7 @@ export default class Msg extends Component {
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <SafeAreaView style={styles.container}>
           <FlatList
-            data={this.state.groupList}
+            data={this.state.friends}
             renderItem={this._renderItem.bind(this)}
             keyExtractor={(item) => item.id}
           />

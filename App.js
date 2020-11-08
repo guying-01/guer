@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors  : gy
- * @LastEditTime : 2020-11-07 18:32:26
+ * @LastEditTime : 2020-11-08 19:58:54
  */
 /**
  * Sample React Native App
@@ -13,7 +13,8 @@
  */
 
 import React, {useState, useRef} from 'react';
-import {ToastAndroid} from 'react-native';
+import {ToastAndroid, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer, TabActions} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import JMessage from 'jmessage-react-plugin';
@@ -24,6 +25,8 @@ import Login from './component/Login/Login';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import GroupSetting from './component/GroupSetting';
+import AddFriend from './component/AddFriend';
+import Popover from 'react-native-popover-view';
 
 import codePush from 'react-native-code-push';
 import {
@@ -64,12 +67,65 @@ class App extends React.Component {
       channel: '',
     });
     JMessage.setDebugMode({enable: true});
+
+    JMessage.addSyncOfflineMessageListener(async (result) => {
+      let offlineMsg = await AsyncStorage.getItem('offlineMsg');
+      if (offlineMsg) {
+        offlineMsg.push(result);
+      }
+      console.log(offlineMsg);
+      await AsyncStorage.setItem('offlineMsg', offlineMsg);
+    });
   }
   render() {
     return (
       <NavigationContainer>
         <RootStack.Navigator>
-          <RootStack.Screen name="顾尔" component={Tabs} />
+          <RootStack.Screen
+            name="顾尔"
+            component={Tabs}
+            options={({navigation, route}) => ({
+              headerRight: () => (
+                <Ionicons
+                  name="add-circle-outline"
+                  size={20}
+                  color="#000"
+                  style={{paddingRight: 5}}
+                  onPress={() =>
+                    navigation.navigate('AddFriend', {
+                      name: '添加好友',
+                    })
+                  }
+                />
+
+                // <Popover
+                //   // arrowStyle={{display: 'none'}}
+                //   // arrowShift={0.24}
+                //   from={
+                //     // <Ionicons
+                //     //   name="add-circle-outline"
+                //     //   size={20}
+                //     //   color="#000"
+                //     //   style={{paddingRight: 5}}
+                //     //   // onPress={() =>
+                //     //   //   navigation.navigate('GroupSetting', {
+                //     //   //     groupId: route.params.groupId,
+                //     //   //     name: '群组设置',
+                //     //   //   })
+                //     //   // }
+                //     // />
+
+                //     <TouchableOpacity>
+                //       <Text>Press here to open popover!</Text>
+                //     </TouchableOpacity>
+                //   }>
+                //   <View style={styles.popoverWrapperStyle}>
+                //     <Text>添加好友</Text>
+                //   </View>
+                // </Popover>
+              ),
+            })}
+          />
           <RootStack.Screen
             name="Chat"
             component={Chat}
@@ -107,13 +163,22 @@ class App extends React.Component {
             component={Login}
             options={({navigation, route}) => ({
               headerTitle: (props) => {
-                return <Text> {route.params.name}</Text>;
+                return <Text> {route.params.name || '登录'}</Text>;
               },
             })}
           />
           <RootStack.Screen
             name="Register"
             component={Register}
+            options={({navigation, route}) => ({
+              headerTitle: (props) => {
+                return <Text> {route.params.name || '注册'}</Text>;
+              },
+            })}
+          />
+          <RootStack.Screen
+            name="AddFriend"
+            component={AddFriend}
             options={({navigation, route}) => ({
               headerTitle: (props) => {
                 return <Text> {route.params.name}</Text>;

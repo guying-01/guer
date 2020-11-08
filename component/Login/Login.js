@@ -64,7 +64,10 @@ export default class Login extends Component {
                 <Text
                   style={{color: '#61dafb'}}
                   onPress={() => {
-                    this.props.navigation.navigate('Register', {name: '注册'});
+                    this.props.navigation.navigate('Register', {
+                      name: '注册',
+                      refresh: this.props.route.params.refresh,
+                    });
                   }}>
                   还没有账号？去注册
                 </Text>

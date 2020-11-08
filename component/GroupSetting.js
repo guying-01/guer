@@ -1,5 +1,13 @@
+/*
+ * @Author       : gy
+ * @Date         : 2020-11-06 21:22:59
+ * @LastEditors  : gy
+ * @LastEditTime : 2020-11-07 20:18:09
+ * @FilePath     : /guer/component/GroupSetting.js
+ * @Description  : 页面描述
+ */
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import JMessage from 'jmessage-react-plugin';
 
 export default class GroupSetting extends Component {
@@ -27,11 +35,18 @@ export default class GroupSetting extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.wrapperStyle}>
         <Text>群聊id:{this.props.route.params.groupId}</Text>
         <Text>群聊设置</Text>
-        <Text onPress={() => this.dissolveGroup()}>解散该群</Text>
+        {/* <Text onPress={() => this.dissolveGroup()}>解散该群</Text> */}
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  wrapperStyle: {
+    flex: 1,
+    padding: 10,
+  },
+});
