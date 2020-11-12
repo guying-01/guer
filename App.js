@@ -1,8 +1,8 @@
 /*
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
- * @LastEditors  : gy
- * @LastEditTime : 2020-11-08 19:58:54
+ * @LastEditors: gy
+ * @LastEditTime: 2020-11-12 18:18:05
  */
 /**
  * Sample React Native App
@@ -52,13 +52,29 @@ function LoginScreen() {
 global.appkey = '5197b5beda256e4329b5f195';
 class App extends React.Component {
   componentDidMount() {
-    codePush.checkForUpdate().then((update) => {
-      if (update) {
-        ToastAndroid.show('有新的更新！', ToastAndroid.SHORT);
-      } else {
-        ToastAndroid.show('已是最新，不需要更新！', ToastAndroid.SHORT);
-      }
-    });
+    codePush
+      .checkForUpdate('w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV')
+      .then((update) => {
+        if (update) {
+          codePush.sync({
+            deploymentKey: 'w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV',
+            updateDialog: {
+              appendReleaseDescription: true,
+              descriptionPrefix: '\n\n更新内容：\n',
+              title: '发现新版本',
+              mandatoryUpdateMessage:
+                '更新内容：\n' + (update.description || '无'),
+              optionalUpdateMessage:
+                '更新内容：\n' + (update.description || '无'),
+              optionalInstallButtonLabel: '后台更新',
+              optionalIgnoreButtonLabel: '忽略',
+              mandatoryContinueButtonLabel: '确定',
+            },
+          });
+        } else {
+          codePush.notifyAppReady();
+        }
+      });
 
     JMessage.init({
       appkey: '5197b5beda256e4329b5f195',
