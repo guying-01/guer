@@ -269,7 +269,7 @@ export default class Msg extends Component {
               />
             )}
             data={this.state.friends}
-            renderItem={this._renderItem}
+            renderItem={this._renderItem.bind(this)}
             keyExtractor={(item, index) => index.toString()}
             renderHiddenItem={(data, rowMap) => (
               <View style={styles.rowBack}>

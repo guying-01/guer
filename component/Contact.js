@@ -41,7 +41,7 @@ export default class Contact extends Component {
     JMessage.acceptInvitation(
       {username: item.fromUsername, appKey: ''},
       () => {
-        ToastAndroid.show('添加成功');
+        ToastAndroid.show('添加成功', ToastAndroid.SHORT);
       },
       (error) => {
         var desc = error.description;
