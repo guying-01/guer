@@ -6082,6 +6082,11 @@ react-native-code-push@^6.3.0:
     semver "^7.3.2"
     xcode "3.0.1"
 
+react-native-form@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.npm.taobao.org/react-native-form/download/react-native-form-2.1.3.tgz#87550625e694c415b28e03853d7ea249ba2323c0"
+  integrity sha1-h1UGJeaUxBWyjgOFPX6iSbojI8A=
+
 react-native-gesture-handler@^1.8.0:
   version "1.8.0"
   resolved "https://registry.npm.taobao.org/react-native-gesture-handler/download/react-native-gesture-handler-1.8.0.tgz#18f61f51da50320f938957b0ee79bc58f47449dc"
@@ -6137,6 +6142,11 @@ react-native-scrollable-tab-view@^1.0.0:
     create-react-class "^15.6.2"
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.3"
+
+react-native-swipe-list-view@^3.2.5:
+  version "3.2.5"
+  resolved "https://registry.npm.taobao.org/react-native-swipe-list-view/download/react-native-swipe-list-view-3.2.5.tgz#e10297ae53c9df79a5ef93bd01f47c47ad5dc23b"
+  integrity sha1-4QKXrlPJ33ml75O9AfR8R61dwjs=
 
 react-native-vector-icons@^7.1.0:
   version "7.1.0"

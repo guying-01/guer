@@ -10,12 +10,15 @@ import {
   TouchableOpacity,
   Dimensions,
   ToastAndroid,
+  DeviceEventEmitter,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Chat from './Chat';
 import JMessage from 'jmessage-react-plugin';
 import Prompt from './Prompt';
+import {SwipeListView} from 'react-native-swipe-list-view';
+
 let {width, height} = Dimensions.get('window');
 
 function rand(m) {
@@ -38,28 +41,44 @@ export default class Msg extends Component {
       friends: [],
     };
   }
-  componentDidMount() {
-    JMessage.getMyInfo((info) => {
-      global.groupId = '45927173';
-      console.log(info);
-      if (info.username == undefined) {
-        this.props.navigation.navigate('Login', {
-          name: '登陆',
-          refresh: () => {
-            this.getFriends();
-          },
-        });
-      } else {
-        global.username = info.username;
-        this.getFriends();
-        // this.props.navigation.navigate('Login', {
-        //   name: '登陆',
-        //   refresh: () => {
-        //     this.getPublicGroups();
-        //   },
-        // });
-      }
+  async componentDidMount() {
+    this.pageMount = DeviceEventEmitter.addListener('GetFriends', (param) => {
+      this.getFriends();
     });
+    // JMessage.getMyInfo((info) => {
+    //   if (info.username == undefined) {
+    const isLogin = await global.Storage.getItem('isLogin');
+    if (isLogin) {
+      const username = await global.Storage.getItem('username');
+      const password = await global.Storage.getItem('password');
+      JMessage.login(
+        {
+          username,
+          password,
+        },
+        (loginRes) => {
+          global.username = this.state.username;
+          this.props.navigation.navigate('顾尔');
+          this.getFriends();
+        },
+        (loginError) => {
+          ToastAndroid.show(
+            '登陆失败' + loginError.description,
+            ToastAndroid.SHORT,
+          );
+        },
+      );
+    } else {
+      this.props.navigation.navigate('Login', {
+        name: '登陆',
+      });
+      DeviceEventEmitter.emit('GetFriends');
+    }
+    // } else {
+    //   global.username = info.username;
+    //   this.getFriends();
+    // }
+    // });
   }
 
   // componentDidUpdate() {
@@ -204,19 +223,37 @@ export default class Msg extends Component {
     }
   }
 
-  _renderItem({item}) {
+  componentWillUnmount() {
+    this.pageMount.remove();
+  }
+
+  _renderItem({item, index}) {
     return (
-      <View style={styles.itemStyle}>
-        <TouchableOpacity>
-          <Text
-            style={styles.title}
-            onPress={() => {
-              this.joinChatRoom(item);
-            }}>
-            {item.username}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.itemStyle} key={index.toString()}>
+        <Text
+          style={styles.title}
+          onPress={() => {
+            this.joinChatRoom(item);
+          }}>
+          {item && item.username}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  deleteFriend(data) {
+    const username = data.item.username;
+    console.log('删除' + username);
+    JMessage.removeFromFriendList(
+      {username, appKey: ''},
+      () => {
+        ToastAndroid.show('删除成功', ToastAndroid.SHORT);
+        this.getFriends();
+      },
+      (error) => {
+        var desc = error.description;
+        ToastAndroid.show('删除失败' + desc, ToastAndroid.SHORT);
+      },
     );
   }
 
@@ -224,10 +261,34 @@ export default class Msg extends Component {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <SafeAreaView style={styles.container}>
-          <FlatList
+          <SwipeListView
+            useFlatList={true}
+            ItemSeparatorComponent={({highlighted}) => (
+              <View
+                style={[styles.separator, highlighted && {marginLeft: 0}]}
+              />
+            )}
             data={this.state.friends}
-            renderItem={this._renderItem.bind(this)}
-            keyExtractor={(item) => item.id}
+            renderItem={this._renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            renderHiddenItem={(data, rowMap) => (
+              <View style={styles.rowBack}>
+                <Text
+                  onPress={() => {
+                    this.deleteFriend(data, rowMap);
+                  }}>
+                  删除
+                </Text>
+                <Text
+                  onPress={() => {
+                    this.deleteFriend(data, rowMap);
+                  }}>
+                  删除
+                </Text>
+              </View>
+            )}
+            leftOpenValue={75}
+            rightOpenValue={-75}
           />
         </SafeAreaView>
         <Prompt
@@ -256,8 +317,21 @@ const styles = StyleSheet.create({
     // flex: 1,
     // marginVertical: 8,
     // marginHorizontal: 16,
-    // backgroundColor: '#f9c2ff',
+    backgroundColor: '#efefef',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#d6d6d6',
+  },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+    paddingRight: 15,
   },
 });

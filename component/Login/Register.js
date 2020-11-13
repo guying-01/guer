@@ -11,6 +11,7 @@ import {
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native';
 import JMessage from 'jmessage-react-plugin';
 
@@ -39,7 +40,7 @@ export default class Login extends Component {
             console.log(loginRes);
             global.username = this.state.username;
             this.props.navigation.navigate('顾尔');
-            this.props.route.params.refresh();
+            DeviceEventEmitter.emit('GetFriends');
           },
           (loginError) => {
             ToastAndroid.show('登陆失败' + loginError, ToastAndroid.SHORT);

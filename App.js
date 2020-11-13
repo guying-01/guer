@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-11-12 18:18:05
+ * @LastEditTime: 2020-11-13 16:19:40
  */
 /**
  * Sample React Native App
@@ -14,7 +14,6 @@
 
 import React, {useState, useRef} from 'react';
 import {ToastAndroid, TouchableOpacity} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer, TabActions} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import JMessage from 'jmessage-react-plugin';
@@ -22,6 +21,7 @@ import Tabs from './component/Tabs';
 import Chat from './component/Chat';
 import Register from './component/Login/Register';
 import Login from './component/Login/Login';
+import Contact from './component/Contact';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import GroupSetting from './component/GroupSetting';
@@ -29,6 +29,10 @@ import AddFriend from './component/AddFriend';
 import Popover from 'react-native-popover-view';
 
 import codePush from 'react-native-code-push';
+
+import Storage from './utils/store';
+
+global.Storage = new Storage();
 import {
   SafeAreaView,
   StyleSheet,
@@ -85,12 +89,12 @@ class App extends React.Component {
     JMessage.setDebugMode({enable: true});
 
     JMessage.addSyncOfflineMessageListener(async (result) => {
-      let offlineMsg = await AsyncStorage.getItem('offlineMsg');
+      let offlineMsg = await global.Storage.getItem('offlineMsg');
       if (offlineMsg) {
         offlineMsg.push(result);
       }
       console.log(offlineMsg);
-      await AsyncStorage.setItem('offlineMsg', offlineMsg);
+      global.Storage.setItem('offlineMsg', offlineMsg);
     });
   }
   render() {
@@ -198,6 +202,15 @@ class App extends React.Component {
             options={({navigation, route}) => ({
               headerTitle: (props) => {
                 return <Text> {route.params.name}</Text>;
+              },
+            })}
+          />
+          <RootStack.Screen
+            name="contact"
+            component={Contact}
+            options={({navigation, route}) => ({
+              headerTitle: (props) => {
+                return <Text> 好友申请</Text>;
               },
             })}
           />

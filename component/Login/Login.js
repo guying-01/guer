@@ -11,6 +11,7 @@ import {
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native';
 import JMessage from 'jmessage-react-plugin';
 
@@ -31,11 +32,17 @@ export default class Login extends Component {
       },
       (loginRes) => {
         global.username = this.state.username;
+        global.Storage.setItem('isLogin', true);
+        global.Storage.setItem('username', global.username);
+        global.Storage.setItem('password', this.state.password);
         this.props.navigation.navigate('顾尔');
-        this.props.route.params.refresh();
+        DeviceEventEmitter.emit('GetFriends');
       },
       (loginError) => {
-        ToastAndroid.show('登陆失败' + loginError, ToastAndroid.SHORT);
+        ToastAndroid.show(
+          '登陆失败' + loginError.description,
+          ToastAndroid.SHORT,
+        );
       },
     );
   }
@@ -66,7 +73,6 @@ export default class Login extends Component {
                   onPress={() => {
                     this.props.navigation.navigate('Register', {
                       name: '注册',
-                      refresh: this.props.route.params.refresh,
                     });
                   }}>
                   还没有账号？去注册
