@@ -17,6 +17,10 @@ import {
   Image,
 } from 'react-native';
 import JMessage from 'jmessage-react-plugin';
+let curUsername = '';
+global.Storage.getItem('username').then((res) => {
+  curUsername = res;
+});
 export default class Chat extends Component {
   constructor(props) {
     super(props);
@@ -100,7 +104,7 @@ export default class Chat extends Component {
                 // return (
                 //   <Text key={item.serverMessageId}>{item && item.text}</Text>
                 // );
-                if (item.from.username == global.username) {
+                if (item.from.username == curUsername) {
                   return (
                     <Text
                       key={item.serverMessageId}
