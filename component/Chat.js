@@ -18,9 +18,7 @@ import {
 } from 'react-native';
 import JMessage from 'jmessage-react-plugin';
 let curUsername = '';
-global.Storage.getItem('username').then((res) => {
-  curUsername = res;
-});
+
 export default class Chat extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +28,10 @@ export default class Chat extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    console.log(global.Storage.getItem('username'), 'curUsername');
+    curUsername = await global.Storage.getItem('username');
+
     const username = this.props.route.params.name;
     var listener = (message) => {
       console.log(message, this.state.msgArr);

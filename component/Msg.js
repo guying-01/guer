@@ -30,6 +30,8 @@ function rand(m) {
   return num.substring(num.length - m);
 }
 
+let eventListener = '';
+
 export default class Msg extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +44,7 @@ export default class Msg extends Component {
     };
   }
   async componentDidMount() {
-    this.pageMount = DeviceEventEmitter.addListener('GetFriends', (param) => {
+    eventListener = DeviceEventEmitter.addListener('GetFriends', (param) => {
       this.getFriends();
     });
     // JMessage.getMyInfo((info) => {
@@ -224,7 +226,7 @@ export default class Msg extends Component {
   }
 
   componentWillUnmount() {
-    this.pageMount.remove();
+    eventListener.remove();
   }
 
   _renderItem({item, index}) {

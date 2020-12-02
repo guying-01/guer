@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-11-13 16:19:40
+ * @LastEditTime: 2020-12-02 14:13:39
  */
 /**
  * Sample React Native App
@@ -31,7 +31,7 @@ import Popover from 'react-native-popover-view';
 import codePush from 'react-native-code-push';
 
 import Storage from './utils/store';
-
+console.log(Storage);
 global.Storage = new Storage();
 import {
   SafeAreaView,
