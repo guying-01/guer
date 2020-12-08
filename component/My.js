@@ -2,7 +2,7 @@
  * @Author       : gy
  * @Date         : 2020-11-06 21:22:59
  * @LastEditors: gy
- * @LastEditTime: 2020-12-08 15:04:16
+ * @LastEditTime: 2020-12-08 16:51:36
  * @FilePath     : /guer/component/My.js
  * @Description  : 页面描述
  */
@@ -123,10 +123,9 @@ export default class My extends Component {
       height: 400,
       cropping: true,
     }).then((image) => {
-      let source = {uri: image.path};
-      this._fetchImage(image);
+      // this._fetchImage(image);
       this.setState({
-        avatarSource: source
+        avatarSource: image.path
      });
     });
   }
@@ -158,12 +157,12 @@ export default class My extends Component {
             <Image
               style={styles.tinyLogo}
               source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
+                uri: this.state.avatarSource || 'https://reactnative.dev/img/tiny_logo.png',
               }}
             />
           </TouchableOpacity>
 
-          <Text style={styles.myInfoStyle}>{this.state.username}1</Text>
+          <Text style={styles.myInfoStyle}>{this.state.username}</Text>
         </View>
         <SwipeListView
           useFlatList={true}

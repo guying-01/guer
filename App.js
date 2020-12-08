@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-12-02 14:13:39
+ * @LastEditTime: 2020-12-08 16:19:28
  */
 /**
  * Sample React Native App
@@ -31,7 +31,6 @@ import Popover from 'react-native-popover-view';
 import codePush from 'react-native-code-push';
 
 import Storage from './utils/store';
-console.log(Storage);
 global.Storage = new Storage();
 import {
   SafeAreaView,
@@ -56,6 +55,7 @@ function LoginScreen() {
 global.appkey = '5197b5beda256e4329b5f195';
 class App extends React.Component {
   componentDidMount() {
+    codePush.notifyAppReady();
     codePush
       .checkForUpdate('w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV')
       .then((update) => {
