@@ -139,6 +139,7 @@ android {
             APP_CHANNEL: "developer-default"		//应用渠道号
         ]
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     splits {
         abi {
