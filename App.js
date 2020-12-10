@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-12-08 16:19:28
+ * @LastEditTime: 2020-12-10 11:43:48
  */
 /**
  * Sample React Native App
@@ -53,32 +53,36 @@ function LoginScreen() {
 }
 
 global.appkey = '5197b5beda256e4329b5f195';
+global.requestUrl = 'https://guying.club:3001/';
+global.primaryColor = '#61dafb';
 class App extends React.Component {
   componentDidMount() {
-    codePush.notifyAppReady();
-    codePush
-      .checkForUpdate('w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV')
-      .then((update) => {
-        if (update) {
-          codePush.sync({
-            deploymentKey: 'w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV',
-            updateDialog: {
-              appendReleaseDescription: true,
-              descriptionPrefix: '\n\n更新内容：\n',
-              title: '发现新版本',
-              mandatoryUpdateMessage:
-                '更新内容：\n' + (update.description || '无'),
-              optionalUpdateMessage:
-                '更新内容：\n' + (update.description || '无'),
-              optionalInstallButtonLabel: '后台更新',
-              optionalIgnoreButtonLabel: '忽略',
-              mandatoryContinueButtonLabel: '确定',
-            },
-          });
-        } else {
-          codePush.notifyAppReady();
-        }
-      });
+    if (!__DEV__) {
+      codePush.notifyAppReady();
+      codePush
+        .checkForUpdate('w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV')
+        .then((update) => {
+          if (update) {
+            codePush.sync({
+              deploymentKey: 'w2ixDpVU_44n-kzQxDa2D4xtQyLRBQWoDYaIV',
+              updateDialog: {
+                appendReleaseDescription: true,
+                descriptionPrefix: '\n\n更新内容：\n',
+                title: '发现新版本',
+                mandatoryUpdateMessage:
+                  '更新内容：\n' + (update.description || '无'),
+                optionalUpdateMessage:
+                  '更新内容：\n' + (update.description || '无'),
+                optionalInstallButtonLabel: '后台更新',
+                optionalIgnoreButtonLabel: '忽略',
+                mandatoryContinueButtonLabel: '确定',
+              },
+            });
+          } else {
+            codePush.notifyAppReady();
+          }
+        });
+    }
 
     JMessage.init({
       appkey: '5197b5beda256e4329b5f195',

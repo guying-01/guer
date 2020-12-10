@@ -2,7 +2,7 @@
  * @Author       : gy
  * @Date         : 2020-11-06 21:22:59
  * @LastEditors: gy
- * @LastEditTime: 2020-12-08 16:51:36
+ * @LastEditTime: 2020-12-10 10:38:30
  * @FilePath     : /guer/component/My.js
  * @Description  : 页面描述
  */
@@ -32,7 +32,7 @@ export default class My extends Component {
     this.state = {
       username: '',
       contactMsgNum: 0,
-      avatarSource:'',
+      avatarSource: '',
       data: [
         // {
         //   id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -125,29 +125,33 @@ export default class My extends Component {
     }).then((image) => {
       // this._fetchImage(image);
       this.setState({
-        avatarSource: image.path
-     });
+        avatarSource: image.path,
+      });
     });
   }
 
   _fetchImage(image) {
     let url = 'http:。。。。。。。。'; // 接口地址
-    let file = {uri: image.path, type: 'multipart/form-data', name:'image.png' } ; // file 中这三个元素缺一不可。 type 必须为 multipart/form-data。
+    let file = {
+      uri: image.path,
+      type: 'multipart/form-data',
+      name: 'image.png',
+    }; // file 中这三个元素缺一不可。 type 必须为 multipart/form-data。
 
     let formData = new FormData();
     formData.append('file', file); // 这里的 file 要与后台名字对应。
 
-    fetch(url,{
-        method:'POST',
-        headers:{
-            'Content-Type':'multipart/form-data',
-        },
-        body:formData,
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      body: formData,
     }).then(function (response) {
-        console.log("response",response);
-        return response.json();
-    })
-}
+      console.log('response', response);
+      return response.json();
+    });
+  }
 
   render() {
     return (
@@ -157,7 +161,9 @@ export default class My extends Component {
             <Image
               style={styles.tinyLogo}
               source={{
-                uri: this.state.avatarSource || 'https://reactnative.dev/img/tiny_logo.png',
+                uri:
+                  this.state.avatarSource ||
+                  'https://reactnative.dev/img/tiny_logo.png',
               }}
             />
           </TouchableOpacity>

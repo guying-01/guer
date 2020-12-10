@@ -1179,6 +1179,13 @@
     react-is "^16.13.0"
     use-subscription "^1.5.0"
 
+"@react-navigation/material-top-tabs@^5.3.10":
+  version "5.3.10"
+  resolved "https://registry.npm.taobao.org/@react-navigation/material-top-tabs/download/@react-navigation/material-top-tabs-5.3.10.tgz#158b694e87bff2eb9577e8142415de8ac3547412"
+  integrity sha1-FYtpToe/8uuVd+gUJBXeisNUdBI=
+  dependencies:
+    color "^3.1.3"
+
 "@react-navigation/native@^5.8.2":
   version "5.8.2"
   resolved "https://registry.npm.taobao.org/@react-navigation/native/download/@react-navigation/native-5.8.2.tgz#22908a8496447477ad91622f749625ac94ea97f8"

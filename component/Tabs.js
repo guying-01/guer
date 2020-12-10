@@ -2,7 +2,7 @@
  * @Author       : gy
  * @Date         : 2020-11-06 21:22:59
  * @LastEditors: gy
- * @LastEditTime: 2020-11-13 15:40:02
+ * @LastEditTime: 2020-12-09 14:28:37
  * @FilePath     : /guer/component/Tabs.js
  * @Description  : 页面描述
  */
@@ -12,8 +12,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import My from './My';
 import Msg from './Msg';
-const MsgStack = createStackNavigator();
+import Book from '../views/book/index';
 
+const MsgStack = createStackNavigator();
 function MsgScreen() {
   return (
     <MsgStack.Navigator>
@@ -21,6 +22,16 @@ function MsgScreen() {
     </MsgStack.Navigator>
   );
 }
+
+const BookStack = createStackNavigator();
+function BookScreen() {
+  return (
+    <BookStack.Navigator>
+      <BookStack.Screen name="book" component={Book} />
+    </BookStack.Navigator>
+  );
+}
+
 const Tab = createBottomTabNavigator();
 export default class Tabs extends Component {
   render() {
@@ -36,6 +47,8 @@ export default class Tabs extends Component {
                 : 'chatbubble-ellipses-outline';
             } else if (route.name === '我的') {
               iconName = focused ? 'body' : 'body-outline';
+            } else if (route.name === 'book') {
+              iconName = focused ? 'book' : 'book-outline';
             }
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -46,6 +59,14 @@ export default class Tabs extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="聊天" component={MsgScreen} />
+        <Tab.Screen
+          name="book"
+          component={BookScreen}
+          options={{
+            tabBarLabel: '阅读',
+            tabBarBadge: 3,
+          }}
+        />
         <Tab.Screen name="我的" component={My} />
       </Tab.Navigator>
     );

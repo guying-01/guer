@@ -14,6 +14,7 @@
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/viewpager": "^4.1.6",
     "@react-navigation/bottom-tabs": "^5.10.2",
+    "@react-navigation/material-top-tabs": "^5.3.10",
     "@react-navigation/native": "^5.8.2",
     "@react-navigation/stack": "^5.12.1",
     "appcenter": "^3.1.2",
