@@ -2,7 +2,7 @@
  * @Author       : gy
  * @Date         : 2020-11-06 21:22:59
  * @LastEditors: gy
- * @LastEditTime: 2020-12-10 17:06:20
+ * @LastEditTime: 2020-12-11 17:03:46
  * @FilePath     : /guer/component/GroupSetting.js
  * @Description  : 页面描述
  */
@@ -44,36 +44,47 @@ export default class Book extends Component {
       : data[index];
   }
 
-  rederItem({name, cover, auth, viewed, last_modify_time}) {
+  read(id) {
+    this.props.navigation.navigate('text', {id});
+  }
+
+  rederItem({name, cover, auth, viewed, last_modify_time, id}) {
     return (
-      <View style={styles.itemStyle}>
-        <Image
-          style={styles.coverStyle}
-          source={{
-            uri: cover
-              ? `https://guying.club/static/book/cover/${cover}`
-              : 'https://guying.club/static/book/cover/default.jpg',
-          }}
-        />
-        <View style={styles.itemContentStyle}>
-          <Text style={styles.itemTitleStyle}>{name}</Text>
-          <Text style={styles.itemSubTitleStyle}>{auth}</Text>
-          <Text>
-            热度：
-            <Text style={styles.itemViewedStyle}>{viewed}</Text>
-          </Text>
-          <Text>最后更新：{last_modify_time}</Text>
-        </View>
+      <View>
+        <TouchableOpacity
+          onPress={() => this.read(id)}
+          style={styles.itemStyle}>
+          <Image
+            style={styles.coverStyle}
+            source={{
+              uri: cover
+                ? `https://guying.club/static/book/cover/${cover}`
+                : 'https://guying.club/static/book/cover/default.jpg',
+            }}
+          />
+          <View style={styles.itemContentStyle}>
+            <Text style={styles.itemTitleStyle}>{name}</Text>
+            <Text style={styles.itemSubTitleStyle}>{auth}</Text>
+            <Text>
+              热度：
+              <Text style={styles.itemViewedStyle}>{viewed}</Text>
+            </Text>
+            <Text>最后更新：{last_modify_time}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
 
   handleChangeTab(item) {
-    this.setState({
-      activeTab: item.id,
-    });
-
-    this.getList();
+    this.setState(
+      {
+        activeTab: item.id,
+      },
+      () => {
+        this.getList();
+      },
+    );
   }
 
   emptyComponent() {
@@ -88,6 +99,11 @@ export default class Book extends Component {
     let category = Tabs.find((item) => {
       return item.id == this.state.activeTab;
     }).name;
+
+    this.setState({
+      refreshing: true,
+    });
+
     const url = `https://guying.club:3001/book/getBookList?category=${category}`;
     fetch(url, {
       headers: {
@@ -126,7 +142,8 @@ export default class Book extends Component {
             return (
               <TouchableOpacity
                 key={index}
-                onPress={() => this.handleChangeTab(item)}>
+                onPress={() => this.handleChangeTab(item)}
+                style={styles.tabItemWrapStyle}>
                 <Text
                   style={[
                     styles.tabItemStyle,
@@ -181,17 +198,20 @@ const styles = StyleSheet.create({
   },
   tabStyle: {
     display: 'flex',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     flexDirection: 'row',
-    height: 30,
-    borderRadius: 20,
     backgroundColor: '#dedede',
     marginLeft: 20,
     marginRight: 20,
-    alignItems: 'center',
+  },
+  tabItemWrapStyle: {
+    width: 100,
   },
   tabItemStyle: {
     color: '#1a1a1a',
+    textAlign: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   activeTabStyle: {
     color: '#61dafb',
