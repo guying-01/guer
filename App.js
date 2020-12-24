@@ -2,7 +2,7 @@
  * @Author: gy
  * @Date: 2020-08-31 13:32:20
  * @LastEditors: gy
- * @LastEditTime: 2020-12-10 11:43:48
+ * @LastEditTime: 2020-12-22 17:31:41
  */
 /**
  * Sample React Native App
@@ -22,6 +22,7 @@ import Chat from './component/Chat';
 import Register from './component/Login/Register';
 import Login from './component/Login/Login';
 import Contact from './component/Contact';
+import BookDetail from './views/book/text';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import GroupSetting from './component/GroupSetting';
@@ -121,33 +122,8 @@ class App extends React.Component {
                     })
                   }
                 />
-
-                // <Popover
-                //   // arrowStyle={{display: 'none'}}
-                //   // arrowShift={0.24}
-                //   from={
-                //     // <Ionicons
-                //     //   name="add-circle-outline"
-                //     //   size={20}
-                //     //   color="#000"
-                //     //   style={{paddingRight: 5}}
-                //     //   // onPress={() =>
-                //     //   //   navigation.navigate('GroupSetting', {
-                //     //   //     groupId: route.params.groupId,
-                //     //   //     name: '群组设置',
-                //     //   //   })
-                //     //   // }
-                //     // />
-
-                //     <TouchableOpacity>
-                //       <Text>Press here to open popover!</Text>
-                //     </TouchableOpacity>
-                //   }>
-                //   <View style={styles.popoverWrapperStyle}>
-                //     <Text>添加好友</Text>
-                //   </View>
-                // </Popover>
               ),
+              title: (route && route.params && route.params.title) || '顾尔',
             })}
           />
           <RootStack.Screen
@@ -215,6 +191,16 @@ class App extends React.Component {
             options={({navigation, route}) => ({
               headerTitle: (props) => {
                 return <Text> 好友申请</Text>;
+              },
+            })}
+          />
+
+          <RootStack.Screen
+            name="text"
+            component={BookDetail}
+            options={({navigation, route}) => ({
+              headerTitle: (props) => {
+                return <Text> {route.params.title}</Text>;
               },
             })}
           />

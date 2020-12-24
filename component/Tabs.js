@@ -2,7 +2,7 @@
  * @Author       : gy
  * @Date         : 2020-11-06 21:22:59
  * @LastEditors: gy
- * @LastEditTime: 2020-12-11 13:54:11
+ * @LastEditTime: 2020-12-22 17:08:48
  * @FilePath     : /guer/component/Tabs.js
  * @Description  : 页面描述
  */
@@ -13,7 +13,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import My from './My';
 import Msg from './Msg';
 import Book from '../views/book/index';
-import Text from '../views/book/text';
 
 const MsgStack = createStackNavigator();
 function MsgScreen() {
@@ -28,8 +27,8 @@ const BookStack = createStackNavigator();
 function BookScreen() {
   return (
     <BookStack.Navigator>
+      {/* <BookStack.Screen name="text" component={Text} /> */}
       <BookStack.Screen name="book" component={Book} />
-      <BookStack.Screen name="text" component={Text} />
     </BookStack.Navigator>
   );
 }

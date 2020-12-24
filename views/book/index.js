@@ -2,7 +2,7 @@
  * @Author       : gy
  * @Date         : 2020-11-06 21:22:59
  * @LastEditors: gy
- * @LastEditTime: 2020-12-11 17:03:46
+ * @LastEditTime: 2020-12-22 17:09:54
  * @FilePath     : /guer/component/GroupSetting.js
  * @Description  : 页面描述
  */
@@ -44,15 +44,15 @@ export default class Book extends Component {
       : data[index];
   }
 
-  read(id) {
-    this.props.navigation.navigate('text', {id});
+  read(id, name) {
+    this.props.navigation.navigate('text', {id, title: name});
   }
 
   rederItem({name, cover, auth, viewed, last_modify_time, id}) {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => this.read(id)}
+          onPress={() => this.read(id, name)}
           style={styles.itemStyle}>
           <Image
             style={styles.coverStyle}
